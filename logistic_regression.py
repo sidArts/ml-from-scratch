@@ -108,7 +108,7 @@ weights = np.array([[0.0], [0.0]])
 final_weights, cost_history = train(features, weights, labels, 0.001, 10000)
 print('Final Weights : ' + str(final_weights))
 
-predictions = predict(features, weights)
+predictions = predict(features, final_weights)
 results = classify(predictions)
 
 print("Probabilities : " + str(predictions))
