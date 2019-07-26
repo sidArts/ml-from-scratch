@@ -1,0 +1,73 @@
+import math
+import numpy as np
+
+
+def dot(v1, v2):
+    """dot product of 2 vectors"""
+    return sum([x * y for x, y in zip(v1, v2)])
+
+
+def subtract(v1, v2):
+    return [x - y for x, y in zip(v1, v2)]
+
+
+def mean(x):
+    return sum(x) / len(x)
+
+
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
+
+def predict(features, weights):
+    '''
+    :param features: (M, N)
+    :param weights: (M, K)
+    :return: 1D array of probabilities
+    '''
+    z = dot(features, weights)
+    return sigmoid(z)
+
+
+def derivative_sigmoid(z):
+    return z * (1 - z)
+
+
+def derivative_likelihood(sigma, label):
+    return (-label / sigma) + ((1 - label) / (1 - sigma))
+
+
+def predict(features, weights):
+    '''
+    :param features: (M, N)
+    :param weights: (M, K)
+    :return: 1D array of probabilities
+    '''
+
+    return sigmoid(dot(features, weights))
+
+
+def update_coefficients(predictions, labels, coefficients, learning_rate):
+    errors = subtract(predictions, labels)
+    cost = mean([dot(features, errors) for features in feature_set])
+    for j in range(1, len(coefficients)):
+        coefficients[j] = coefficients[j] - (learning_rate * cost)
+    coefficients[0] = coefficients[0] - (learning_rate * mean(errors))
+    return coefficients
+
+
+def train(feature_set, labels, coefficients, iterations, learning_rate=0.001):
+    for i in range(0, iterations):
+        predictions = [predict(features, coefficients) for features in feature_set]
+        coefficients = update_coefficients(predictions, labels, coefficients, learning_rate)
+    print(coefficients)
+    return coefficients
+
+feature_set = [[4], [3], [6], [1], [7], [6.5], [3.5], [4], [8], [7.5], [6], [9]]
+labels = [0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1]
+coefficients = [0, 0]
+feature_set = [[1] + feature for feature in feature_set]
+print(feature_set)
+updated_coefficients = train(feature_set, labels, coefficients, 1000, 0.01)
+print(labels)
+print([1 if sigmoid(dot(feature, updated_coefficients)) > 0.5 else 0 for feature in feature_set ])
